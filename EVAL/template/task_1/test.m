@@ -114,7 +114,7 @@ figure; imagesc(img); colormap gray; axis image; showpts([x;y],p); title('Harris
 
 %% hessian detektor
 img = im2double(imread('cameraman.tif'));
-[x y]=hessian(img, 1, 0.01); 
+[x, y]=hessian(img, 1, 0.01); 
 junk = x<cutoff*sigma | x>w-cutoff*sigma | y<cutoff*sigma | y>h-cutoff*sigma; x(junk)=[]; y(junk)=[];
 figure; imagesc(img); colormap gray; axis image; showpts([x;y],p); title('Hessian detektor, sigma 1');
 
