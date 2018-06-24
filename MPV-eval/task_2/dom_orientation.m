@@ -2,8 +2,7 @@ function angle=dom_orientation(img)
 %dom_orientationdominant orientation estimation in a normalized patch. 
 [height, width] = size(img);
 hist_bins = 120;
-x=(-ceil(3.0*):ceil(3.0*sigma))
-%[dx, dy] = gaussderiv(img, 1);
+[dx, dy] = gaussderiv(img, 1);
 orient = atan2(dy, dx);orient = orient(:);
 mag = sqrt(dx.^2 + dy.^2);
 Gy = gauss(-height/2:height/2-1, height/3);

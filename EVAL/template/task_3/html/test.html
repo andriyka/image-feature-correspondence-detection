@@ -67,7 +67,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
   </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">timestamp</a></li><li><a href="#2">load ease case</a></li><li><a href="#3">find tentative correspondences method mutually closest descriptions</a></li><li><a href="#4">run RANSAC to find consistent matches</a></li><li><a href="#5">load hard case</a></li><li><a href="#6">find tentative correspondences method stable closest descriptions</a></li><li><a href="#7">run RANSAC to find consistent matches</a></li><li><a href="#8">find tentative correspondences method stable closest descriptions</a></li><li><a href="#9">run RANSAC to find consistent matches</a></li><li><a href="#10">distance of inliers, can differ depending on best found H</a></li><li><a href="#11">load non planar case</a></li><li><a href="#12">find tentative correspondences method stable closest descriptions</a></li><li><a href="#13">run RANSAC to find consistent matches</a></li></ul></div><h2 id="1">timestamp</h2><pre class="codeinput">fprintf(1,<span class="string">'Started on %s\n'</span>, datestr(now));
-</pre><pre class="codeoutput">Started on 24-Jun-2018 10:52:02
+</pre><pre class="codeoutput">Started on 24-Jun-2018 19:53:06
 </pre><h2 id="2">load ease case</h2><pre class="codeinput">load(<span class="string">'im1_harris.mat'</span>); pts1=pts;
 load(<span class="string">'im2_harris.mat'</span>); pts2=pts;
 im1=im2double(rgb2gray(imread(<span class="string">'img1.png'</span>)));

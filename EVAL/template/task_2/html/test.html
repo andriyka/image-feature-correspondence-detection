@@ -67,7 +67,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
   </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">timestamp</a></li><li><a href="#2">detection of affine regions ininput images and visualisation of preselected regions</a></li><li><a href="#3">detection</a></li><li><a href="#4">visualisation of frames</a></li><li><a href="#5">selected corresponding frames (without rotation)</a></li><li><a href="#6">dominant orientation estimation</a></li><li><a href="#7">affine frames (without rotation) with dominant orientation vector projected</a></li><li><a href="#8">euclidean normalization (translation+dominant orientation) of patches</a></li><li><a href="#9">similarity normalization (x,y,s+dominant orientation) of patches</a></li><li><a href="#10">affine normalization of patches</a></li><li><a href="#11">photometric normalization (of affine normalized patches)</a></li><li><a href="#12">dct coefficients distance table</a></li><li><a href="#13">comparison of corresponding dct coefficients</a></li><li><a href="#14">comparison of non-corresponding dct coefficients</a></li><li><a href="#15">dxdy gradient descs distance table</a></li><li><a href="#16">SIFT descs distance table</a></li><li><a href="#17">timestamp</a></li></ul></div><h2 id="1">timestamp</h2><pre class="codeinput">fprintf(1,<span class="string">'Evaluation started at %s'</span>, datestr(now));
-</pre><pre class="codeoutput">Evaluation started at 24-Jun-2018 10:51:57</pre><h2 id="2">detection of affine regions ininput images and visualisation of preselected regions</h2><pre class="codeinput">corrs = [ 508 184 262 520 211;
+</pre><pre class="codeoutput">Evaluation started at 24-Jun-2018 19:52:47</pre><h2 id="2">detection of affine regions ininput images and visualisation of preselected regions</h2><pre class="codeinput">corrs = [ 508 184 262 520 211;
           553 200 291 559 222];
 sz = size(corrs,2);
 </pre><h2 id="3">detection</h2><pre class="codeinput">p=[]; p.color=<span class="string">'r'</span>;  p.linewidth=2; opts.showids=1; opts.cutoff=2;
@@ -81,10 +81,10 @@ im2=im2double(rgb2gray(imread(<span class="string">'img2.png'</span>)));
 pts2=mser_detector(im2);
 ptsc2=pts2(corrs(2,:));
 figure; set(gca,<span class="string">'position'</span>, [0 0 1 1]); imagesc(im2,[0 1]); colormap <span class="string">gray</span>; showpts(ptsc2, p, opts); axis(<span class="string">'image'</span>,<span class="string">'off'</span>);
-</pre><pre class="codeoutput">  MSER+ inten.    : OK, 169 regions in 0.037 sec
-  MSER- inten.    : OK, 407 regions in 0.046 sec
-  MSER+ inten.    : OK, 186 regions in 0.044 sec
-  MSER- inten.    : OK, 480 regions in 0.048 sec
+</pre><pre class="codeoutput">  MSER+ inten.    : OK, 169 regions in 0.044 sec
+  MSER- inten.    : OK, 407 regions in 0.066 sec
+  MSER+ inten.    : OK, 186 regions in 0.062 sec
+  MSER- inten.    : OK, 480 regions in 0.085 sec
 </pre><img vspace="5" hspace="5" src="test_01.png" alt=""> <img vspace="5" hspace="5" src="test_02.png" alt=""> <h2 id="4">visualisation of frames</h2><pre class="codeinput">of=[];
 of.show_unit_vectors=1;
 of.ext=3; of.ps=51;
@@ -119,18 +119,14 @@ ra=cell(1,sz);
            [0 sin(ra{i}(j))*of.ps/of.ext]+of.ps/2+1, <span class="string">'parent'</span>, ax, <span class="string">'color'</span>, <span class="string">'m'</span>, <span class="string">'linewidth'</span>, 2);
    <span class="keyword">end</span>;
 <span class="keyword">end</span>;
-</pre><pre class="codeoutput error">Undefined function 'affinetr' for input arguments of type 'double'.
-
-Error in test (line 43)
-   tmp = affinetr(im1, f1(:,:,i), of.ps, of.ext);
-</pre><h2 id="7">affine frames (without rotation) with dominant orientation vector projected</h2><pre class="codeinput">figure; set(gca,<span class="string">'position'</span>, [0 0 1 1]); imagesc(im1,[0 1]); colormap <span class="string">gray</span>; axis(<span class="string">'image'</span>,<span class="string">'off'</span>); p.parent=gca;
+</pre><img vspace="5" hspace="5" src="test_05.png" alt=""> <h2 id="7">affine frames (without rotation) with dominant orientation vector projected</h2><pre class="codeinput">figure; set(gca,<span class="string">'position'</span>, [0 0 1 1]); imagesc(im1,[0 1]); colormap <span class="string">gray</span>; axis(<span class="string">'image'</span>,<span class="string">'off'</span>); p.parent=gca;
 of.show_orientation=la;
 showframes(f1, p, of);
 
 figure; set(gca,<span class="string">'position'</span>, [0 0 1 1]); imagesc(im2,[0 1]); colormap <span class="string">gray</span>; axis(<span class="string">'image'</span>,<span class="string">'off'</span>); p.parent=gca;
 of.show_orientation=ra;
 showframes(f2, p, of);
-</pre><h2 id="8">euclidean normalization (translation+dominant orientation) of patches</h2><pre class="codeinput">of=[];
+</pre><img vspace="5" hspace="5" src="test_06.png" alt=""> <img vspace="5" hspace="5" src="test_07.png" alt=""> <h2 id="8">euclidean normalization (translation+dominant orientation) of patches</h2><pre class="codeinput">of=[];
 of.show_unit_vectors=1;
 of.ext=3; of.ps=51;
 
@@ -153,6 +149,7 @@ showframes(p1, p, of);
 
 figure; set(gca,<span class="string">'position'</span>, [0 0 1 1]); imagesc(im2,[0 1]); colormap <span class="string">gray</span>; axis(<span class="string">'image'</span>,<span class="string">'off'</span>); p.parent=gca;
 showframes(p2, p, of);
+</pre><pre class="codeoutput">Elapsed time is 0.111343 seconds.
 </pre><h2 id="9">similarity normalization (x,y,s+dominant orientation) of patches</h2><pre class="codeinput"><span class="comment">% scale of a circle with the same area</span>
 s1 = sqrt([ptsc1.a11].*[ptsc1.a22]-[ptsc1.a12].*[ptsc1.a21]);
 s2 = sqrt([ptsc2.a11].*[ptsc2.a22]-[ptsc2.a12].*[ptsc2.a21]);
@@ -188,6 +185,7 @@ showframes(p1, p, of);
 
 figure; set(gca,<span class="string">'position'</span>, [0 0 1 1]); imagesc(im2,[0 1]); colormap <span class="string">gray</span>; axis(<span class="string">'image'</span>,<span class="string">'off'</span>); p.parent=gca;
 showframes(p2, p, of);
+</pre><pre class="codeoutput">Elapsed time is 0.095015 seconds.
 </pre><h2 id="11">photometric normalization (of affine normalized patches)</h2><pre class="codeinput">tic
 p1=photonorm(p1);
 p2=photonorm(p2);
@@ -212,8 +210,43 @@ h=figure(<span class="string">'units'</span>, <span class="string">'char'</span>
 <span class="keyword">else</span>
    fprintf(<span class="string">'Missing DCTDESC function.\n'</span>);
 <span class="keyword">end</span>;
-</pre><h2 id="13">comparison of corresponding dct coefficients</h2><pre class="codeinput">[ p1(1).desc(2:12)' ; p2(1).desc(2:12)' ]
+</pre><pre class="codeoutput">
+dist =
+
+    0.0414    0.0271    0.0165    0.0185    0.0319
+    0.0270    0.0177    0.0388    0.0273    0.0123
+    0.0438    0.0282    0.0002    0.0372    0.0414
+    0.0400    0.0263    0.0393    0.0014    0.0279
+    0.0331    0.0161    0.0434    0.0300    0.0005
+
+</pre><img vspace="5" hspace="5" src="test_12.png" alt=""> <h2 id="13">comparison of corresponding dct coefficients</h2><pre class="codeinput">[ p1(1).desc(2:12)' ; p2(1).desc(2:12)' ]
+</pre><pre class="codeoutput">
+ans =
+
+  Columns 1 through 7
+
+    0.4622    0.5301    0.4898    0.4937    0.4782    0.4519    0.4082
+    0.4118    0.5332    0.4709    0.4892    0.5114    0.5324    0.5356
+
+  Columns 8 through 11
+
+    0.5325    0.5123    0.5083    0.5091
+    0.4757    0.4862    0.5017    0.5301
+
 </pre><h2 id="14">comparison of non-corresponding dct coefficients</h2><pre class="codeinput">[ p1(2).desc(2:12)' ; p2(5).desc(2:12)' ]
+</pre><pre class="codeoutput">
+ans =
+
+  Columns 1 through 7
+
+    0.4842    0.4783    0.4546    0.5052    0.4303    0.4883    0.5258
+    0.4837    0.5247    0.4207    0.4952    0.4138    0.4803    0.5025
+
+  Columns 8 through 11
+
+    0.5043    0.4944    0.4875    0.4899
+    0.5057    0.4979    0.5002    0.4885
+
 </pre><h2 id="15">dxdy gradient descs distance table</h2><pre class="codeinput"><span class="keyword">if</span> exist(<span class="string">'ghistodesc'</span>)==2
    <span class="keyword">for</span> i=1:sz,
       p1(i).desc=ghistodesc(p1(i).patch, 10); p1(i).desc = p1(i).desc(:);
@@ -229,6 +262,7 @@ h=figure(<span class="string">'units'</span>, <span class="string">'char'</span>
 <span class="keyword">else</span>
    fprintf(<span class="string">'Missing GHISTODESC function.\n'</span>);
 <span class="keyword">end</span>;
+</pre><pre class="codeoutput">Missing GHISTODESC function.
 </pre><h2 id="16">SIFT descs distance table</h2><pre class="codeinput"><span class="keyword">if</span> exist(<span class="string">'siftdesc'</span>)==2
    <span class="keyword">for</span> i=1:sz,
       p1(i).desc=siftdesc(p1(i).patch); p1(i).desc = p1(i).desc(:);
@@ -244,8 +278,9 @@ h=figure(<span class="string">'units'</span>, <span class="string">'char'</span>
 <span class="keyword">else</span>
    fprintf(<span class="string">'Missing SIFTDESC function.\n'</span>);
 <span class="keyword">end</span>;
+</pre><pre class="codeoutput">Missing SIFTDESC function.
 </pre><h2 id="17">timestamp</h2><pre class="codeinput">fprintf(1,<span class="string">'Finished at %s'</span>, datestr(now));
-</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+</pre><pre class="codeoutput">Finished at 24-Jun-2018 19:53:03</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% timestamp
 fprintf(1,'Evaluation started at %s', datestr(now));
