@@ -1,0 +1,308 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-06-24"><meta name="DC.source" content="test.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">timestamp</a></li><li><a href="#2">load ease case</a></li><li><a href="#3">find tentative correspondences method mutually closest descriptions</a></li><li><a href="#4">run RANSAC to find consistent matches</a></li><li><a href="#5">load hard case</a></li><li><a href="#6">find tentative correspondences method stable closest descriptions</a></li><li><a href="#7">run RANSAC to find consistent matches</a></li><li><a href="#8">find tentative correspondences method stable closest descriptions</a></li><li><a href="#9">run RANSAC to find consistent matches</a></li><li><a href="#10">distance of inliers, can differ depending on best found H</a></li><li><a href="#11">load non planar case</a></li><li><a href="#12">find tentative correspondences method stable closest descriptions</a></li><li><a href="#13">run RANSAC to find consistent matches</a></li></ul></div><h2 id="1">timestamp</h2><pre class="codeinput">fprintf(1,<span class="string">'Started on %s\n'</span>, datestr(now));
+</pre><pre class="codeoutput">Started on 24-Jun-2018 10:52:02
+</pre><h2 id="2">load ease case</h2><pre class="codeinput">load(<span class="string">'im1_harris.mat'</span>); pts1=pts;
+load(<span class="string">'im2_harris.mat'</span>); pts2=pts;
+im1=im2double(rgb2gray(imread(<span class="string">'img1.png'</span>)));
+im2=im2double(rgb2gray(imread(<span class="string">'img2.png'</span>)));
+</pre><h2 id="3">find tentative correspondences method mutually closest descriptions</h2><pre class="codeinput">matchpar.threshold=inf;
+matchpar.method=<span class="string">'mutual'</span>;
+
+fprintf(<span class="string">'Find correspondences using mutually nearest matching...\n'</span>);
+tic
+corr=match(pts1, pts2, matchpar);
+t=toc;
+
+fprintf(<span class="string">'Found %d tentative correspondences in %.3f sec.\n'</span>, size(corr,2), t);
+u=corr2u(pts1, pts2, corr);
+</pre><pre class="codeoutput">Find correspondences using mutually nearest matching...
+</pre><pre class="codeoutput error">Undefined function 'match' for input arguments of type 'struct'.
+
+Error in test (line 18)
+corr=match(pts1, pts2, matchpar);
+</pre><h2 id="4">run RANSAC to find consistent matches</h2><pre class="codeinput"><span class="comment">% RANSAC is a randomized algorithm, repeat run three times.</span>
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+H=H./H(3,3)
+showcorrs(im1,im2,u, inl);
+</pre><h2 id="5">load hard case</h2><pre class="codeinput">load(<span class="string">'im1_mser.mat'</span>); pts1=pts;
+load(<span class="string">'im2_mser.mat'</span>); pts2=pts;
+im1=im2double(rgb2gray(imread(<span class="string">'img1.png'</span>)));
+im2=im2double(rgb2gray(imread(<span class="string">'img5.png'</span>)));
+</pre><h2 id="6">find tentative correspondences method stable closest descriptions</h2><pre class="codeinput">matchpar.threshold=inf;
+matchpar.method=<span class="string">'stable'</span>;
+
+fprintf(<span class="string">'\nFind correspondences using weak stable matching...\n'</span>);
+tic
+corr=match(pts1, pts2, matchpar);
+t=toc;
+
+fprintf(<span class="string">'Found %d tentative correspondences in %.3f sec.\n'</span>, size(corr,2), t);
+u=corr2u(pts1, pts2, corr);
+</pre><h2 id="7">run RANSAC to find consistent matches</h2><pre class="codeinput"><span class="comment">% RANSAC is a randomized algorithm, repeat run three times.</span>
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+H=H./H(3,3)
+showcorrs(im1,im2,u, inl);
+</pre><h2 id="8">find tentative correspondences method stable closest descriptions</h2><pre class="codeinput">matchpar.threshold=inf;
+matchpar.method=<span class="string">'sclosest'</span>;
+
+fprintf(<span class="string">'\nFind correspondences using second closest matching...\n'</span>);
+tic
+corr=match(pts1, pts2, matchpar);
+t=toc;
+
+fprintf(<span class="string">'Found %d tentative correspondences in %.3f sec.\n'</span>, size(corr,2), t);
+u=corr2u(pts1, pts2, corr);
+</pre><h2 id="9">run RANSAC to find consistent matches</h2><pre class="codeinput"><span class="comment">% RANSAC is a randomized algorithm, repeat run three times.</span>
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+H=H./H(3,3)
+showcorrs(im1,im2,u, inl);
+</pre><h2 id="10">distance of inliers, can differ depending on best found H</h2><pre class="codeinput">dist=sqrt(hdist(H,u(:,inl)))
+</pre><h2 id="11">load non planar case</h2><pre class="codeinput">load(<span class="string">'im1f_mser.mat'</span>); pts1=pts;
+load(<span class="string">'im2f_mser.mat'</span>); pts2=pts;
+im1=im2double(rgb2gray(imread(<span class="string">'washA.png'</span>)));
+im2=im2double(rgb2gray(imread(<span class="string">'washB.png'</span>)));
+</pre><h2 id="12">find tentative correspondences method stable closest descriptions</h2><pre class="codeinput">matchpar.threshold=inf;
+matchpar.method=<span class="string">'sclosest'</span>;
+
+fprintf(<span class="string">'\nFind correspondences using second closest matching...\n'</span>);
+tic
+corr=match(pts1, pts2, matchpar);
+t=toc;
+
+fprintf(<span class="string">'Found %d tentative correspondences in %.3f sec.\n'</span>, size(corr,2), t);
+u=corr2u(pts1, pts2, corr);
+</pre><h2 id="13">run RANSAC to find consistent matches</h2><pre class="codeinput"><span class="comment">% RANSAC is a randomized algorithm, repeat run three times.</span>
+tic; [F inl]=ransac_f(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [F inl]=ransac_f(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [F inl]=ransac_f(u, 5, 0.99); t=toc;
+fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
+showcorrs(im1,im2, u, inl);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+   
+%% timestamp
+fprintf(1,'Started on %s\n', datestr(now));
+
+%% load ease case
+load('im1_harris.mat'); pts1=pts;
+load('im2_harris.mat'); pts2=pts;
+im1=im2double(rgb2gray(imread('img1.png')));
+im2=im2double(rgb2gray(imread('img2.png')));
+
+%% find tentative correspondences method mutually closest descriptions
+
+matchpar.threshold=inf;
+matchpar.method='mutual';
+
+fprintf('Find correspondences using mutually nearest matching...\n');
+tic
+corr=match(pts1, pts2, matchpar);
+t=toc;
+
+fprintf('Found %d tentative correspondences in %.3f sec.\n', size(corr,2), t);
+u=corr2u(pts1, pts2, corr);
+
+%% run RANSAC to find consistent matches
+
+% RANSAC is a randomized algorithm, repeat run three times.
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+H=H./H(3,3)
+showcorrs(im1,im2,u, inl);
+
+%% load hard case
+
+load('im1_mser.mat'); pts1=pts;
+load('im2_mser.mat'); pts2=pts;
+im1=im2double(rgb2gray(imread('img1.png')));
+im2=im2double(rgb2gray(imread('img5.png')));
+
+%% find tentative correspondences method stable closest descriptions
+
+matchpar.threshold=inf;
+matchpar.method='stable';
+
+fprintf('\nFind correspondences using weak stable matching...\n');
+tic
+corr=match(pts1, pts2, matchpar);
+t=toc;
+
+fprintf('Found %d tentative correspondences in %.3f sec.\n', size(corr,2), t);
+u=corr2u(pts1, pts2, corr);
+
+%% run RANSAC to find consistent matches
+
+% RANSAC is a randomized algorithm, repeat run three times.
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+H=H./H(3,3)
+showcorrs(im1,im2,u, inl);
+
+%% find tentative correspondences method stable closest descriptions
+
+matchpar.threshold=inf;
+matchpar.method='sclosest';
+
+fprintf('\nFind correspondences using second closest matching...\n');
+tic
+corr=match(pts1, pts2, matchpar);
+t=toc;
+
+fprintf('Found %d tentative correspondences in %.3f sec.\n', size(corr,2), t);
+u=corr2u(pts1, pts2, corr);
+
+%% run RANSAC to find consistent matches
+
+% RANSAC is a randomized algorithm, repeat run three times.
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+H=H./H(3,3)
+showcorrs(im1,im2,u, inl);
+
+%% distance of inliers, can differ depending on best found H
+dist=sqrt(hdist(H,u(:,inl)))
+
+%% load non planar case
+
+load('im1f_mser.mat'); pts1=pts;
+load('im2f_mser.mat'); pts2=pts;
+im1=im2double(rgb2gray(imread('washA.png')));
+im2=im2double(rgb2gray(imread('washB.png')));
+
+%% find tentative correspondences method stable closest descriptions
+
+matchpar.threshold=inf;
+matchpar.method='sclosest';
+
+fprintf('\nFind correspondences using second closest matching...\n');
+tic
+corr=match(pts1, pts2, matchpar);
+t=toc;
+
+fprintf('Found %d tentative correspondences in %.3f sec.\n', size(corr,2), t);
+u=corr2u(pts1, pts2, corr);
+
+%% run RANSAC to find consistent matches
+
+% RANSAC is a randomized algorithm, repeat run three times.
+tic; [F inl]=ransac_f(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [F inl]=ransac_f(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+
+tic; [F inl]=ransac_f(u, 5, 0.99); t=toc;
+fprintf('Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n', sum(inl), 100*sum(inl)/size(corr,2), t);
+showcorrs(im1,im2, u, inl);
+##### SOURCE END #####
+--></body></html>
