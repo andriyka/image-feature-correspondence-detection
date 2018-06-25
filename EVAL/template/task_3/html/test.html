@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-06-24"><meta name="DC.source" content="test.m"><style type="text/css">
+      --><title>test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-06-25"><meta name="DC.source" content="test.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -67,7 +67,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
   </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">timestamp</a></li><li><a href="#2">load ease case</a></li><li><a href="#3">find tentative correspondences method mutually closest descriptions</a></li><li><a href="#4">run RANSAC to find consistent matches</a></li><li><a href="#5">load hard case</a></li><li><a href="#6">find tentative correspondences method stable closest descriptions</a></li><li><a href="#7">run RANSAC to find consistent matches</a></li><li><a href="#8">find tentative correspondences method stable closest descriptions</a></li><li><a href="#9">run RANSAC to find consistent matches</a></li><li><a href="#10">distance of inliers, can differ depending on best found H</a></li><li><a href="#11">load non planar case</a></li><li><a href="#12">find tentative correspondences method stable closest descriptions</a></li><li><a href="#13">run RANSAC to find consistent matches</a></li></ul></div><h2 id="1">timestamp</h2><pre class="codeinput">fprintf(1,<span class="string">'Started on %s\n'</span>, datestr(now));
-</pre><pre class="codeoutput">Started on 24-Jun-2018 19:53:06
+</pre><pre class="codeoutput">Started on 25-Jun-2018 16:58:09
 </pre><h2 id="2">load ease case</h2><pre class="codeinput">load(<span class="string">'im1_harris.mat'</span>); pts1=pts;
 load(<span class="string">'im2_harris.mat'</span>); pts2=pts;
 im1=im2double(rgb2gray(imread(<span class="string">'img1.png'</span>)));
@@ -83,10 +83,7 @@ t=toc;
 fprintf(<span class="string">'Found %d tentative correspondences in %.3f sec.\n'</span>, size(corr,2), t);
 u=corr2u(pts1, pts2, corr);
 </pre><pre class="codeoutput">Find correspondences using mutually nearest matching...
-</pre><pre class="codeoutput error">Undefined function 'match' for input arguments of type 'struct'.
-
-Error in test (line 18)
-corr=match(pts1, pts2, matchpar);
+Found 375 tentative correspondences in 0.560 sec.
 </pre><h2 id="4">run RANSAC to find consistent matches</h2><pre class="codeinput"><span class="comment">% RANSAC is a randomized algorithm, repeat run three times.</span>
 tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
 fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
@@ -98,7 +95,17 @@ tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
 fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
 H=H./H(3,3)
 showcorrs(im1,im2,u, inl);
-</pre><h2 id="5">load hard case</h2><pre class="codeinput">load(<span class="string">'im1_mser.mat'</span>); pts1=pts;
+</pre><pre class="codeoutput">Found 207 inliers 55.20 percent of tentative correspondences in 0.059 sec.
+Found 219 inliers 58.40 percent of tentative correspondences in 0.011 sec.
+Found 220 inliers 58.67 percent of tentative correspondences in 0.008 sec.
+
+H =
+
+    0.8715    0.3201  -39.8550
+   -0.1864    0.9348  153.3736
+    0.0002   -0.0000    1.0000
+
+</pre><img vspace="5" hspace="5" src="test_01.png" alt=""> <h2 id="5">load hard case</h2><pre class="codeinput">load(<span class="string">'im1_mser.mat'</span>); pts1=pts;
 load(<span class="string">'im2_mser.mat'</span>); pts2=pts;
 im1=im2double(rgb2gray(imread(<span class="string">'img1.png'</span>)));
 im2=im2double(rgb2gray(imread(<span class="string">'img5.png'</span>)));
@@ -112,6 +119,9 @@ t=toc;
 
 fprintf(<span class="string">'Found %d tentative correspondences in %.3f sec.\n'</span>, size(corr,2), t);
 u=corr2u(pts1, pts2, corr);
+</pre><pre class="codeoutput">
+Find correspondences using weak stable matching...
+Found 576 tentative correspondences in 0.447 sec.
 </pre><h2 id="7">run RANSAC to find consistent matches</h2><pre class="codeinput"><span class="comment">% RANSAC is a randomized algorithm, repeat run three times.</span>
 tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
 fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
@@ -123,7 +133,17 @@ tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
 fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
 H=H./H(3,3)
 showcorrs(im1,im2,u, inl);
-</pre><h2 id="8">find tentative correspondences method stable closest descriptions</h2><pre class="codeinput">matchpar.threshold=inf;
+</pre><pre class="codeoutput">Found 93 inliers 16.15 percent of tentative correspondences in 2.401 sec.
+Found 99 inliers 17.19 percent of tentative correspondences in 1.253 sec.
+Found 95 inliers 16.49 percent of tentative correspondences in 1.535 sec.
+
+H =
+
+    0.6192    0.0690  221.4486
+    0.2123    1.1818  -26.3396
+    0.0005   -0.0000    1.0000
+
+</pre><img vspace="5" hspace="5" src="test_02.png" alt=""> <h2 id="8">find tentative correspondences method stable closest descriptions</h2><pre class="codeinput">matchpar.threshold=inf;
 matchpar.method=<span class="string">'sclosest'</span>;
 
 fprintf(<span class="string">'\nFind correspondences using second closest matching...\n'</span>);
@@ -133,6 +153,9 @@ t=toc;
 
 fprintf(<span class="string">'Found %d tentative correspondences in %.3f sec.\n'</span>, size(corr,2), t);
 u=corr2u(pts1, pts2, corr);
+</pre><pre class="codeoutput">
+Find correspondences using second closest matching...
+Found 121 tentative correspondences in 0.282 sec.
 </pre><h2 id="9">run RANSAC to find consistent matches</h2><pre class="codeinput"><span class="comment">% RANSAC is a randomized algorithm, repeat run three times.</span>
 tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
 fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
@@ -144,7 +167,64 @@ tic; [H inl]=ransac_h(u, 5, 0.99); t=toc;
 fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
 H=H./H(3,3)
 showcorrs(im1,im2,u, inl);
-</pre><h2 id="10">distance of inliers, can differ depending on best found H</h2><pre class="codeinput">dist=sqrt(hdist(H,u(:,inl)))
+</pre><pre class="codeoutput">Found 77 inliers 63.64 percent of tentative correspondences in 0.004 sec.
+Found 76 inliers 62.81 percent of tentative correspondences in 0.004 sec.
+Found 73 inliers 60.33 percent of tentative correspondences in 0.010 sec.
+
+H =
+
+    0.6713    0.0680  216.4439
+    0.2600    1.1851  -33.0087
+    0.0006   -0.0000    1.0000
+
+</pre><img vspace="5" hspace="5" src="test_03.png" alt=""> <h2 id="10">distance of inliers, can differ depending on best found H</h2><pre class="codeinput">dist=sqrt(hdist(H,u(:,inl)))
+</pre><pre class="codeoutput">
+dist =
+
+  Columns 1 through 7
+
+    1.1897    3.3444    0.0000    1.7663    1.7098    1.6678    1.4922
+
+  Columns 8 through 14
+
+    2.8468    0.8643    1.7071    2.6180    1.2399    1.3181    1.7227
+
+  Columns 15 through 21
+
+    2.3021    3.0020    0.9496    0.6774    1.9714    0.9929    1.3508
+
+  Columns 22 through 28
+
+    0.0000    0.6116    4.2207    3.8603    4.2992    2.1282    3.5275
+
+  Columns 29 through 35
+
+    1.9931    1.9123    3.1395    1.8308    2.0609    1.6862    2.6300
+
+  Columns 36 through 42
+
+    2.8887    4.8213    2.7552    2.1549    2.2871    2.2899    2.1022
+
+  Columns 43 through 49
+
+    0.0000    0.5684    2.9329    0.8778    2.0036    2.1504    2.0212
+
+  Columns 50 through 56
+
+    2.6049    1.6501    0.7971    0.4281    0.6068    1.0542    1.1024
+
+  Columns 57 through 63
+
+    2.3236    0.9479    2.7712    2.8196    2.0111    1.5177    4.7204
+
+  Columns 64 through 70
+
+    2.0320    1.8697    1.0831    1.1195    0.7065    2.0414    0.0000
+
+  Columns 71 through 73
+
+    2.7134    3.0246    1.6375
+
 </pre><h2 id="11">load non planar case</h2><pre class="codeinput">load(<span class="string">'im1f_mser.mat'</span>); pts1=pts;
 load(<span class="string">'im2f_mser.mat'</span>); pts2=pts;
 im1=im2double(rgb2gray(imread(<span class="string">'washA.png'</span>)));
@@ -159,6 +239,9 @@ t=toc;
 
 fprintf(<span class="string">'Found %d tentative correspondences in %.3f sec.\n'</span>, size(corr,2), t);
 u=corr2u(pts1, pts2, corr);
+</pre><pre class="codeoutput">
+Find correspondences using second closest matching...
+Found 40 tentative correspondences in 0.045 sec.
 </pre><h2 id="13">run RANSAC to find consistent matches</h2><pre class="codeinput"><span class="comment">% RANSAC is a randomized algorithm, repeat run three times.</span>
 tic; [F inl]=ransac_f(u, 5, 0.99); t=toc;
 fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
@@ -169,7 +252,10 @@ fprintf(<span class="string">'Found %d inliers %.2f percent of tentative corresp
 tic; [F inl]=ransac_f(u, 5, 0.99); t=toc;
 fprintf(<span class="string">'Found %d inliers %.2f percent of tentative correspondences in %.3f sec.\n'</span>, sum(inl), 100*sum(inl)/size(corr,2), t);
 showcorrs(im1,im2, u, inl);
-</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+</pre><pre class="codeoutput">Found 26 inliers 65.00 percent of tentative correspondences in 0.076 sec.
+Found 26 inliers 65.00 percent of tentative correspondences in 0.051 sec.
+Found 25 inliers 62.50 percent of tentative correspondences in 0.041 sec.
+</pre><img vspace="5" hspace="5" src="test_04.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
    
 %% timestamp

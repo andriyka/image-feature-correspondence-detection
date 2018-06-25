@@ -1,0 +1,28 @@
+function [Hbest,inl]=ransac_h(u,threshold,confidence)
+%  that estimates the fundamental matrix F* and a set of inliers inl
+points_arr_size = size(u, 2); num_samples = inf;
+  number_of_inl = 0;
+  
+  Hbest = zeros(3,3);
+  inl = zeros(1, points_arr_size);
+  nthreshold = threshold*threshold;
+   count = 1;
+  while count < num_samples
+      sampled = sample(4, points_arr_size);
+      mpoints_arr_size = u(:, sampled);
+      Homo = u2h(mpoints_arr_size);
+      if isempty(Homo)
+          continue;
+      end
+      
+      distances = hdist(Homo, u);
+      if (number_of_inl < sum(distances < nthreshold))
+        Hbest = Homo;
+        inl = distances < nthreshold;
+        number_of_inl = sum(inl);       
+
+        num_samples = nsamples(number_of_inl, points_arr_size, 4, confidence);
+      end;
+      count = count+1;
+  end
+

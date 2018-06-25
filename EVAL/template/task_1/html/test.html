@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-06-24"><meta name="DC.source" content="test.m"><style type="text/css">
+      --><title>test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-06-25"><meta name="DC.source" content="test.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -135,7 +135,7 @@ junk = x&lt;cutoff*s | x&gt;w-cutoff*s | y&lt;cutoff*s | y&gt;h-cutoff*s; x(junk
 <span class="comment">% vizualizace vysledku multiscale detektoru maxim hessianu</span>
 figure; imagesc(img, [-.5 1]); colormap <span class="string">gray</span>; axis <span class="string">ij</span>;
 showpts([x;y;s],p,1.0); title(<span class="string">'Multiscale maxima Hessian detektor'</span>);
-</pre><pre class="codeoutput">Elapsed time is 0.206624 seconds.
+</pre><pre class="codeoutput">Elapsed time is 0.173958 seconds.
 </pre><img vspace="5" hspace="5" src="test_06.png" alt=""> <h2 id="8">kontrola funkcnosti normalizace derivaci</h2><pre class="codeinput"><span class="comment">% globalni maxima a minima na prvnich 10 urovnich</span>
 <span class="keyword">for</span> i=1:10
    c = ceil(3*sigma(i));
@@ -174,14 +174,15 @@ junk = x&lt;cutoff*sigma | x&gt;w-cutoff*sigma | y&lt;cutoff*sigma | y&gt;h-cuto
 figure; imagesc(img); colormap <span class="string">gray</span>; axis <span class="string">image</span>; showpts([x;y],p); title(<span class="string">'Hessian detektor, sigma 1'</span>);
 
 p=[]; p.linewidth=2; p.color = <span class="string">'r'</span>;
-</pre><h2 id="12">multiscale hessian detektor</h2><pre class="codeinput">img = im2double(rgb2gray(imread(<span class="string">'sunflowers.png'</span>))); [h w]=size(img);
+</pre><img vspace="5" hspace="5" src="test_09.png" alt=""> <h2 id="12">multiscale hessian detektor</h2><pre class="codeinput">img = im2double(rgb2gray(imread(<span class="string">'sunflowers.png'</span>))); [h w]=size(img);
 tic
 [x y s]=sshessian(img, 0.02);
 toc
 junk = x&lt;cutoff*s | x&gt;w-cutoff*s | y&lt;cutoff*s | y&gt;h-cutoff*s; x(junk)=[]; y(junk)=[]; s(junk)=[];
 figure; imagesc(img); colormap <span class="string">gray</span>; axis <span class="string">image</span>; showpts([x;y;s],p); title(<span class="string">'Multiscale max. Hessian detektor'</span>);
-</pre><h2 id="13">timestamp</h2><pre class="codeinput">fprintf(1,<span class="string">'Finished at %s'</span>, datestr(now));
-</pre><pre class="codeoutput">Finished at 24-Jun-2018 19:52:44</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+</pre><pre class="codeoutput">Elapsed time is 3.140128 seconds.
+</pre><img vspace="5" hspace="5" src="test_10.png" alt=""> <h2 id="13">timestamp</h2><pre class="codeinput">fprintf(1,<span class="string">'Finished at %s'</span>, datestr(now));
+</pre><pre class="codeoutput">Finished at 25-Jun-2018 16:57:50</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% test nonmaxsup2d
 rand('twister', 0);

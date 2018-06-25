@@ -13,7 +13,7 @@
 
 TEST_DIR = './MPV-eval/'; %directory, where standardized test are located
 UPLOAD_DIR = './';  %directory where student solutions (zip files are located)
-EVAL_DIR = './EVAL1/'; %directory with the resulting html pages
+EVAL_DIR = './EVAL/'; %directory with the resulting html pages
 
 TASKS = 0:4;  %tasks to evaluate (dafault is 0:4)
 

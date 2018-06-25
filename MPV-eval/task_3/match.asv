@@ -1,0 +1,98 @@
+% function corrs=match(pts1, pts2, par)
+% %  finds correspondences between points pts1 and pts2 with method specified in the par structure
+% eps = 0.8; 
+% D = zeros(numel(pts1), numel(pts2));
+% for i=1:numel(pts1)
+%     D(i,:) = sqrt(sum((repmat(pts1(i).desc, 1, numel(pts2)) - [pts2.desc]).^2));
+% end
+%     
+% switch (par.method)
+%   case 'mutual' % for mutual nearest method
+%       mutual_counter = 0;
+%       [min1, ind1] = min(D, [], 1);
+%       [min2, ind2] = min(D, [], 2);
+%        for i=1:numel(min2)
+%           if ind1(ind2(i)) == i && min2(i)<= par.threshold
+%              corrs(:,mutual_counter+1) = [i; ind2(i)];
+%              mutual_counter=mutual_counter+1;             
+%           end
+%        end
+%      case 'stable' %for stable pairing 
+%        stable_max=max(numel(pts1),numel(pts2));%min(numel(pts1),numel(pts2));
+%        stable_counter=1;
+%        for k=1:stable_max
+%           [v, ind]= min(D(:));
+%           [i, j]= ind2sub(size(D),ind);
+%           if (v > par.threshold)             
+%              break;
+%           end
+%           corrs(:,stable_counter)= [i;j];
+%           stable_counter = stable_counter + 1;  
+%           
+%           D(i,:)=inf; 
+%           D(:,j)=inf;
+%        end
+%      case 'sclosest' % for "first/second closest" method
+%         sclosest_counter=1;
+%         for i=1:numel(pts1)
+%             vec = D(i, :);
+%             [dist1, ind1]= min(vec);
+%             vec(ind1) = Inf;
+%             dist2 = min(vec);
+%             if (dist1/dist2 < eps)
+%                 corrs(:,sclosest_counter) = [i; ind1];
+%                 sclosest_counter=sclosest_counter+1;             
+%             end
+%         end
+% end
+
+function corr=match(pts1, pts2, par)
+
+
+   thre = par.threshold*par.threshold;
+   D=zeros(numel(pts1),numel(pts2));
+   
+   tmp = [pts2.desc];   
+   for i=1:numel(pts1)
+      D(i,:) = sum((repmat(pts1(i).desc, 1, numel(pts2)) - tmp).^2);
+   end;
+   
+   switch (par.method)
+     case 'mutual'
+       [m1 p1] = min(D, [], 2); % minima and positions in each row
+       [m2 p2] = min(D, [], 1); % minima and positions in each col
+       corr = zeros(2, min(numel(pts1), numel(pts2)));
+       num_corr = 0;
+       for i=1:numel(pts1)
+          if (p2(p1(i))==i && m1(i)<=threshold)
+             corr(:,num_corr+1) = [i; p1(i)];
+             num_corr=num_corr+1;             
+          end;
+       end;
+       corr(:,num_corr+1:end)=[];
+     case 'stable'
+       max_corr=min(numel(pts1),numel(pts2));
+       num_corr=0;
+       for i=1:max_corr
+          [val, idx]=min(D(:));
+          [y, x]=ind2sub(size(D),idx);
+          if (val>threshold)
+             % we are already done, no more usable pairs             
+             break;
+          end;
+          corr(:,num_corr+1)= [y;x];
+          num_corr=num_corr+1;             
+          D(y,:)=inf; D(:,x)=inf;
+       end;
+       corr(:,num_corr+1:end)=[];
+     case 'sclosest'       
+       num_corr=0;
+       for i=1:numel(pts1)
+          [d ord]=sort(D(i,:));
+          if (d(1)/d(2) < 0.8*0.8)
+             corr(:,num_corr+1) = [i;ord(1)];
+             num_corr=num_corr+1;             
+          end;
+       end;
+       corr(:,num_corr+1:end)=[];
+   end;
